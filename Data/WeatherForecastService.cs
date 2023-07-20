@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace BlazorMQTT.Data
 {
     public class WeatherForecastService
@@ -18,8 +20,8 @@ namespace BlazorMQTT.Data
 
             foreach( WeatherForecast weatherForecast in wfArray )
             {
-                await MQTTClient.Publish((weatherForecast.Date.ToShortDateString()) + "/temperature", weatherForecast.TemperatureC.ToString());
-                await MQTTClient.Publish((weatherForecast.Date.ToShortDateString()) + "/summary", weatherForecast.Summary);
+                await MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/temperature", weatherForecast.TemperatureC.ToString());
+                await MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/summary", weatherForecast.Summary);
             }
 
 

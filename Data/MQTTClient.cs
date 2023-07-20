@@ -27,7 +27,9 @@ namespace BlazorMQTT.Data
 
                 //Console.WriteLine("MQTT application message is published.");
             }
+
+
         }
+
     }
-    
 }
