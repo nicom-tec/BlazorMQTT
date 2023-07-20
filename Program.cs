@@ -1,4 +1,5 @@
 using BlazorMQTT.Data;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -10,8 +11,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddHostedService<MQTTBrokerService>();
 builder.Services.AddHostedService<MQTTDataService>();
-builder.Services.AddEventAggregator(options => options.AutoRefresh = true); // this registers as a singleton
-builder.Services.AddScoped<EventAggregator.Blazor.IEventAggregator, EventAggregator.Blazor.EventAggregator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

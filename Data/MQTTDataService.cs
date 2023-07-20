@@ -1,26 +1,20 @@
-﻿using BlazorMQTT.Data;
-using EventAggregator.Blazor;
-using Microsoft.AspNetCore.Components;
-using MQTTnet;
+﻿using MQTTnet;
 using MQTTnet.Client;
-
-using MQTTnet.Diagnostics;
-using MQTTnet.Protocol;
-using MQTTnet.Server;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace BlazorMQTT.Data
 {
     public class MQTTDataService : BackgroundService
     {
-        [Inject]
-        private IEventAggregator _eventAggregator { get; set; }
+
+
+        public static event Action OnChange;
+        private static void NotifyStateChanged() => OnChange?.Invoke();
 
         public static string number = "0";
-        private static  MqttFactory mqttfactory = new();
-        private static IMqttClient mqttClient = mqttfactory.CreateMqttClient();
+        private static readonly MqttFactory mqttfactory = new();
+        private static readonly IMqttClient mqttClient = mqttfactory.CreateMqttClient();
 
         protected override async Task ExecuteAsync(CancellationToken stopToken)
         {
@@ -30,8 +24,8 @@ namespace BlazorMQTT.Data
             {                
                 number = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
                 Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment));
-                await _eventAggregator.PublishAsync(new ChangedNumberMessage());
-
+                NotifyStateChanged();
+                //Hier muss man nochmal schauen, Object reference not set to an instance of an Object
                 //return Task.CompletedTask;
             };
             var mqttSubscribeOptions = mqttfactory.CreateSubscribeOptionsBuilder()
