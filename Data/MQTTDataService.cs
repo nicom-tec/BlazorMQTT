@@ -21,18 +21,22 @@ namespace BlazorMQTT.Data
 
             var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer("localhost").Build();
             mqttClient.ApplicationMessageReceivedAsync += async e =>
-            {                
-                number = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-                Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment));
-                NotifyStateChanged();
-                //Hier muss man nochmal schauen, Object reference not set to an instance of an Object
-                //return Task.CompletedTask;
+            {   
+                await Task.Run(() =>
+                {
+                    if (e.ApplicationMessage.Topic == "counter")
+                    {
+                        number = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
+                        Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment));
+                        NotifyStateChanged();
+                    }
+                });  
             };
             var mqttSubscribeOptions = mqttfactory.CreateSubscribeOptionsBuilder()
                 .WithTopicFilter(
                 f =>
                 {
-                f.WithTopic("counter");
+                f.WithTopic("#");
                 })
                 .Build();
             await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);

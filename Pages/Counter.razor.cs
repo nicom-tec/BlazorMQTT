@@ -9,7 +9,7 @@ namespace BlazorMQTT.Pages
     {
 
 
-        public int currentCount = 0;
+        public int currentCount = Int32.Parse(res);
         public static String res
         {
             get
