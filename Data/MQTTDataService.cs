@@ -20,7 +20,7 @@ namespace BlazorMQTT.Data
         {
 
             var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer("localhost").Build();
-            mqttClient.ApplicationMessageReceivedAsync += async e =>
+            mqttClient.ApplicationMessageReceivedAsync += async e  =>
             {   
                 await Task.Run(() =>
                 {
