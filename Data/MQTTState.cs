@@ -1,33 +1,53 @@
 ﻿using System.Diagnostics;
+using static BlazorMQTT.Data.MQTTState;
 
 namespace BlazorMQTT.Data
 {
     public class MQTTState
     {
 
-        public static List<MQTTBranch> MQTTTree = new List<MQTTBranch>();
+        public static List<Entry> MQTTTree = new List<Entry>();
 
-        public void addEntry(string _longpath, string _value)
+        public unsafe void addEntry(string _longpath, string _value)
         {
             string[] topicSequence = _longpath.Split('/');
             int d = 0;
-            foreach (Entry entry in entries)
+            List<Entry>* intermediateRoot = &MQTTTree;
+            List<Entry>* root = intermediateRoot;
+            foreach (Entry entry in *root)
             {
-                if (entry.topic = topicSequence[d])
+                
+                if (entry.topic == topicSequence[d])
                 {
-
+                    root = &root->entry;
+                    
+                    
+                }
                 }
             }
         }
-        public class MQTTBranch
-        {
-            public List<Entry> EntryBranch = new List<Entry>();
 
-            public MQTTBranch(List<Entry> _EntryBranch)
+        public unsafe void addEntryBranch(Entry* rootBranch)
+        {
+            foreach(Entry entry in rootBranch->entry)
             {
-                this.EntryBranch = _EntryBranch;
+                if(entry.topic == rootBranch->topic)
+                {
+                    rootBranch->addEntry(rootBranch->entry);
+                }
             }
         }
+
+
+        //public class MQTTBranch
+        //{
+        //    public List<Entry> EntryBranch = new List<Entry>();
+
+        //    public MQTTBranch(List<Entry> _EntryBranch)
+        //    {
+        //        this.EntryBranch = _EntryBranch;
+        //    }
+        //}
 
 
 
