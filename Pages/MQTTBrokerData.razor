@@ -1,21 +1,18 @@
 ﻿@using static BlazorMQTT.Data.MQTTState;
+@page "/MQTTBrokerData"
 
-<p>@string.Join('/',entry.topicSequence)</p>
-@if (entry.value != null)
+<h3>MQTTBrokerData</h3>
+
+@foreach(Entry entry in MQTTTree)
 {
-    <p> = @entry.value</p>
+    <MQTTDataEntry entry="@entry"></MQTTDataEntry>
 }
 
-
-
 @code {
-    [Parameter]
-    public Entry entry { get; set; }
-
     protected override void OnInitialized()
     {
-        entry.OnChange += OnChangeHandler;
-        
+        OnChange += OnChangeHandler;
+
     }
 
     private async void OnChangeHandler()
@@ -24,6 +21,6 @@
     }
     public void Dispose()
     {
-        entry.OnChange -= OnChangeHandler;
+        OnChange -= OnChangeHandler;
     }
 }

@@ -30,6 +30,7 @@ namespace BlazorMQTT.Data
                         Console.WriteLine(Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment));
                         NotifyStateChanged();
                     }
+                    MQTTState.addEntry(e.ApplicationMessage.Topic, Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment));
                 });  
             };
             var mqttSubscribeOptions = mqttfactory.CreateSubscribeOptionsBuilder()
