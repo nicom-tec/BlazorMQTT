@@ -13,14 +13,17 @@ namespace BlazorMQTT.Data
         public static void addEntry(string _longpath, string _value)
         {
             string[] topicSequence = _longpath.Split('/');
-            foreach (Entry entry in MQTTTree) {
-            if (entry.topicSequence.Equals(topicSequence)) { 
-                entry.value = _value;
+            foreach (Entry entry in MQTTTree)
+            {
+                if (string.Join('/',entry.topicSequence) == _longpath)
+                {
+                    entry.value = _value;
                     entry.NotifyStateChanged();
                     return;
                 }
             }
             MQTTTree.Add(new Entry(_longpath, _value));
+            MQTTTree.Sort((a,b) => string.Join('/', a.topicSequence).CompareTo(string.Join('/', b.topicSequence)));
             NotifyStateChanged();
         }
 
@@ -52,7 +55,7 @@ namespace BlazorMQTT.Data
             {
                 this.topicSequence = _topic.Split('/');
                 this.value = _value;
-                
+
 
             }
 

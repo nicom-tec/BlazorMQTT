@@ -18,12 +18,16 @@ namespace BlazorMQTT.Data
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             }).ToArray()).Result;
 
-            foreach( WeatherForecast weatherForecast in wfArray )
+            #pragma warning disable CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
+            Task.Run(() =>
             {
-                await MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/temperature", weatherForecast.TemperatureC.ToString());
-                await MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/summary", weatherForecast.Summary);
-            }
-
+                foreach (WeatherForecast weatherForecast in wfArray)
+                {
+                    MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/temperature", weatherForecast.TemperatureC.ToString());
+                    MQTTClient.Publish((weatherForecast.Date.ToString("d", new CultureInfo("de-DE"))) + "/summary", weatherForecast.Summary);
+                }
+            });
+            #pragma warning restore CS4014 // Da auf diesen Aufruf nicht gewartet wird, wird die Ausführung der aktuellen Methode vor Abschluss des Aufrufs fortgesetzt.
 
             return wfArray;
         }
