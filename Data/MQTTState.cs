@@ -1,10 +1,17 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics;
 using static BlazorMQTT.Data.MQTTState;
 
 namespace BlazorMQTT.Data
 {
     public class MQTTState
     {
+        private readonly IHubContext<MQTTDataHub> _hubContext;
+        public MQTTState(IHubContext<MQTTDataHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
+
 
         public static List<Entry> MQTTTree = new List<Entry>();
         public static event Action OnChange;
@@ -19,6 +26,7 @@ namespace BlazorMQTT.Data
                 {
                     entry.value = _value;
                     entry.NotifyStateChanged();
+                    _hubContext.Clients.All.SendAsync("EntryReceive", entry);
                     return;
                 }
             }
