@@ -6,11 +6,8 @@ namespace BlazorMQTT.Data
 {
     public class MQTTState
     {
-        private readonly IHubContext<MQTTDataHub> _hubContext;
-        public MQTTState(IHubContext<MQTTDataHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
+        private static readonly IHubContext<MQTTDataHub> _hubContext;
+
 
 
         public static List<Entry> MQTTTree = new List<Entry>();
@@ -26,7 +23,8 @@ namespace BlazorMQTT.Data
                 {
                     entry.value = _value;
                     entry.NotifyStateChanged();
-                    _hubContext.Clients.All.SendAsync("EntryReceive", entry);
+                    
+                    //_hubContext.Clients.All.SendAsync("EntryReceive", entry);
                     return;
                 }
             }
